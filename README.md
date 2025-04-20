@@ -1,7 +1,7 @@
 # Quiz-Application
 
 ## Overview
-A Java-based console application that allows users to take quizzes on various topics, track scores, and view results.
+A Java-based console application that allows users to take quizz on Java technology, track scores, and view results.
 
 ## Features
 - User can select answers and receive feedback immediately.
