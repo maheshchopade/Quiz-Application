@@ -9,15 +9,17 @@ import java.util.Scanner;
 import com.module.Question;
 import com.module.Student;
 
+
 public class DataBaseOperation {
 	static Scanner sc = new Scanner(System.in);
 	public static void insertStudent(Student student) throws SQLException {
-		
+		Connection con=null;
+		PreparedStatement ps = null;
 
 		try {
 			Connection con = DbConnection.getConnection();
 			String query = "INSERT INTO students (first_name, last_name, username, password, city, email, mobile) VALUES (?, ?, ?, ?, ?, ?, ?)";
-			PreparedStatement ps = con.prepareStatement(query);
+		        ps = con.prepareStatement(query);
 			ps.setString(1, student.getFirstName());
 			ps.setString(2, student.getLastName());
 			ps.setString(3, student.getUsername());
@@ -27,19 +29,23 @@ public class DataBaseOperation {
 			ps.setString(7, student.getMobile());
 			ps.executeUpdate();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
+		}finally {
+			con.close();
+			ps.close();
 		}
 
 	}
 
 	// Method to update student information
 	public static void updateStudent(Student student) throws SQLException {
-		Connection con;
+		Connection con=null;
+		PreparedStatement ps = null;
 		try {
 			con = DbConnection.getConnection();
 			String query = "UPDATE students SET first_name = ?, last_name = ?, username = ?, password = ?, city = ?, email = ?, mobile = ? WHERE id = ?";
-			PreparedStatement ps = con.prepareStatement(query);
+			ps = con.prepareStatement(query);
 			ps.setString(1, student.getFirstName());
 			ps.setString(2, student.getLastName());
 			ps.setString(3, student.getUsername());
@@ -50,19 +56,23 @@ public class DataBaseOperation {
 			ps.setInt(8, student.getId());
 			ps.executeUpdate();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
+		}finally {
+			con.close();
+			ps.close();
 		}
 
 	}
 
 	 //Method to insert new question
      public static void insertQuestion(Question question) throws SQLException {
-		Connection con;
+		Connection con=null;
+		PreparedStatement ps = null;
 	try {
 			con = DbConnection.getConnection();
 			String query = "INSERT INTO questions (question_text, option1, option2, option3, option4, correct_answer) VALUES (?, ?, ?, ?, ?, ?)";
-			PreparedStatement ps = con.prepareStatement(query);
+		        ps = con.prepareStatement(query);
 			ps.setString(1, question.getQuestion());
 			ps.setString(2, question.getOption1());
 			ps.setString(3, question.getOption2());
@@ -71,18 +81,23 @@ public class DataBaseOperation {
 			ps.setInt(6, question.getCorrectAnswer());
 			ps.executeUpdate();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
 		e.printStackTrace();
+		}finally {
+			con.close();
+			ps.close();
 		}
+
 
 }
 
 	public static void insertResult(int studentId, int score) throws SQLException {
-		Connection con;
+		Connection con=null;
+		PreparedStatement ps = null;
 		try {
 			con = DbConnection.getConnection();
 			String query = "INSERT INTO results (id, score) VALUES (?, ?)";
-			PreparedStatement ps = con.prepareStatement(query);
+		        ps = con.prepareStatement(query);
 			ps.setInt(1, studentId);
 			ps.setInt(2, score);
 			ps.executeUpdate();
@@ -108,6 +123,9 @@ public class DataBaseOperation {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			con.close();
+			ps.close();
 		}
 		return -1;
 
@@ -145,10 +163,11 @@ public class DataBaseOperation {
 	    System.out.print("Enter Password: ");
 	    String password = sc.nextLine();
 
-	    Connection con;
+	  Connection con = null;
+	  PreparedStatement ps = null;
 		try {
 			con = DbConnection.getConnection();
-			PreparedStatement ps = con.prepareStatement("SELECT id FROM students WHERE username = ? AND password = ?");
+		    ps = con.prepareStatement("SELECT id FROM students WHERE username = ? AND password = ?");
 		    ps.setString(1, username);
 		    ps.setString(2, password);
 
@@ -171,8 +190,10 @@ public class DataBaseOperation {
 		        System.out.println("Invalid username or password.");
 		    }
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			con.close();
+			ps.close();
 		}
 	    
 	}
@@ -206,6 +227,7 @@ public class DataBaseOperation {
     public static void fetchScoreById() throws Exception {
         System.out.println("Enter student id:");
         int id = sc.nextInt();
+	    try{
         Connection con = DBConnection.getConnection();
         PreparedStatement ps = con.prepareStatement("SELECT score FROM results WHERE id = ?");
         ps.setInt(1, id);
@@ -214,18 +236,33 @@ public class DataBaseOperation {
             System.out.println("Score is: " + rs.getInt(1));
         } else {
             System.out.println("No score found for given ID.");
-        }
+        }}catch (Exception e) {
+			e.printStackTrace();
+	}finally {
+		con.close();
+		ps.close();
+	}
+
     }
 
     
     // Method to display all student scores
     public static void displayAllScores() throws Exception {
-        Connection con = DBConnection.getConnection();
-        Statement st = con.createStatement();
+	     Connection con=null;
+	     Statement st=null;
+	    try{
+        con = DBConnection.getConnection();
+        st = con.createStatement();
         ResultSet rs = st.executeQuery("SELECT s.first_name, s.last_name, r.score FROM students s JOIN results r ON s.id = r.id ORDER BY r.score ASC");
         while (rs.next()) {
             System.out.println(rs.getString(1) + " " + rs.getString(2) + " - Score: " + rs.getInt(3));
         }
+	    }catch (Exception e) {
+			e.printStackTrace();
+	}finally {
+		con.close();
+		st.close();
+	}
     }
     
 	
