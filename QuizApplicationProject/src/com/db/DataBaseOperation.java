@@ -15,7 +15,7 @@ public class DataBaseOperation {
 		
 
 		try {
-			Connection con = DBConnection.getConnection();
+			Connection con = DbConnection.getConnection();
 			String query = "INSERT INTO students (first_name, last_name, username, password, city, email, mobile) VALUES (?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, student.getFirstName());
@@ -37,7 +37,7 @@ public class DataBaseOperation {
 	public static void updateStudent(Student student) throws SQLException {
 		Connection con;
 		try {
-			con = DBConnection.getConnection();
+			con = DbConnection.getConnection();
 			String query = "UPDATE students SET first_name = ?, last_name = ?, username = ?, password = ?, city = ?, email = ?, mobile = ? WHERE id = ?";
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, student.getFirstName());
@@ -60,7 +60,7 @@ public class DataBaseOperation {
      public static void insertQuestion(Question question) throws SQLException {
 		Connection con;
 	try {
-			con = DBConnection.getConnection();
+			con = DbConnection.getConnection();
 			String query = "INSERT INTO questions (question_text, option1, option2, option3, option4, correct_answer) VALUES (?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setString(1, question.getQuestion());
@@ -80,7 +80,7 @@ public class DataBaseOperation {
 	public static void insertResult(int studentId, int score) throws SQLException {
 		Connection con;
 		try {
-			con = DBConnection.getConnection();
+			con = DbConnection.getConnection();
 			String query = "INSERT INTO results (id, score) VALUES (?, ?)";
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setInt(1, studentId);
@@ -97,7 +97,7 @@ public class DataBaseOperation {
 	public static int getScoreByStudentId(int studentId) throws SQLException {
 		Connection con;
 		try {
-			con = DBConnection.getConnection();
+			con = DbConnection.getConnection();
 			String query = "SELECT score FROM results WHERE id = ?";
 			PreparedStatement ps = con.prepareStatement(query);
 			ps.setInt(1, studentId);
@@ -118,7 +118,7 @@ public class DataBaseOperation {
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
-			con = DBConnection.getConnection();
+			con = DbConnection.getConnection();
 			String query = "INSERT INTO results (student_id, score) VALUES (?, ?)";
 			ps = con.prepareStatement(query);
 			ps.setInt(1, studentId);
@@ -147,7 +147,7 @@ public class DataBaseOperation {
 
 	    Connection con;
 		try {
-			con = DBConnection.getConnection();
+			con = DbConnection.getConnection();
 			PreparedStatement ps = con.prepareStatement("SELECT id FROM students WHERE username = ? AND password = ?");
 		    ps.setString(1, username);
 		    ps.setString(2, password);
