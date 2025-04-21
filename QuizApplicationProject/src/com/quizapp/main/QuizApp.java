@@ -5,10 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Scanner;
 
-import com.db.DBConnection;
-
-
-
 import com.db.*;
 import com.module.*;
 
@@ -85,13 +81,13 @@ public class QuizApp {
     }
 
     static void loginUser() throws Exception {
-            System.out.println("__Login__");
+        System.out.println("__Login__");
         System.out.println("Enter Username:");
         String uname = sc.nextLine();
         System.out.println("Enter Password:");
         String pass = sc.nextLine();
 
-        Connection con = DBConnection.getConnection();
+        Connection con = DbConnection.getConnection();
         PreparedStatement ps = con.prepareStatement("SELECT id FROM students WHERE username=? AND password=?");
         ps.setString(1, uname);
         ps.setString(2, pass);
@@ -107,11 +103,12 @@ public class QuizApp {
 
     private static void takeQuiz() throws SQLException {
        
-        Connection con;
+        Connection con=null;
+	Statement stmt=null;
 		try {
-			con = DBConnection.getConnection();
-			String query = "SELECT * FROM questions";
-	        Statement stmt = con.createStatement();
+		con = DbConnection.getConnection();
+		String query = "SELECT * FROM questions";
+	        stmt = con.createStatement();
 	        ResultSet rs = stmt.executeQuery(query);
 
 	        int score = 0;
@@ -135,9 +132,12 @@ public class QuizApp {
 	        DataBaseOperation.insertResult(currentStudentId, score);
 	        System.out.println("Your score: " + score);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			st.close();
+			con.close();
 		}
+
         
     }
     
